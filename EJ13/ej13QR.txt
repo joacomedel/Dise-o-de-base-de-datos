@@ -1,3 +1,4 @@
+a)
 SELECT PROPIETARIO.tipodoc, PROPIETARIO.nrodoc, licencia 
 FROM PARTICIPA
     NATURAL JOIN  ACCIDENTE
@@ -6,3 +7,38 @@ FROM PARTICIPA
     (PROPIETARIO.nrodoc = VEHICULO.nrodoc AND PROPIETARIO.tipoDoc LIKE VEHICULO.tipoDoc)
 WHERE 
     MONTH(ACCIDENTE.fecha) <> 10 OR ACCIDENTE.ciudad NOT LIKE "neuquen"
+
+
+b)
+SELECT MECANICO.nombre, MECANICO.apellido, MECANICO.ciudad
+FROM ARREGLA
+	NATURAL JOIN PARTE
+	NATURAL JOIN FABRICANTE
+	NATURAL JOIN MECANICO
+WHERE FABRICANTE.pais LIKE "Arg%"AND
+	PARTE.nombre_parte LIKE "Motor%" AND
+	MECANICO.calificacion > 7
+
+c)
+SELECT nombre ,apellido 
+FROM  MECANICO
+WHERE MECANICO.nroDoc IN (
+	SELECT nroDoc
+	FROM ARREGLA a
+	WHERE a.patente IN (
+		SELECT patente 
+		FROM VEHICULO JOIN PROPIETARIO
+		WHERE PROPIETARIO.ciudad LIKE "Allen" AND VEHICULO.modelo LIKE "2005"
+	) 
+  AND 
+  MECANICO.tipoDoc IN (
+    SELECT tipoDoc
+	FROM ARREGLA a
+	WHERE a.patente IN (
+		SELECT patente 
+		FROM VEHICULO JOIN PROPIETARIO
+		WHERE PROPIETARIO.ciudad LIKE "Allen" AND VEHICULO.modelo LIKE "2005"
+	) )
+	GROUP BY a.patente, a.cuit, a.fecha, a.tipoDoc , a.nroDoc
+	HAVING COUNT (*) >1
+)
