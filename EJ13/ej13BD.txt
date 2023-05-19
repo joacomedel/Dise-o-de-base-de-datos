@@ -1,0 +1,101 @@
+CREATE TABLE MECANICO (
+  tipoDoc VARCHAR(10),
+  nroDoc INT,
+  nombre VARCHAR(50),
+  apellido VARCHAR(50),
+  calificacion INT,
+  ciudad VARCHAR(50),
+  PRIMARY KEY (tipoDoc, nroDoc)
+);
+
+CREATE TABLE PROPIETARIO (
+  tipoDoc VARCHAR(10),
+  nroDoc INT,
+  nombre VARCHAR(50),
+  apellido VARCHAR(50),
+  licencia VARCHAR(20),
+  ciudad VARCHAR(50),
+  PRIMARY KEY (tipoDoc, nroDoc)
+);
+
+CREATE TABLE VEHICULO (
+  patente VARCHAR(10),
+  marca VARCHAR(50),
+  modelo VARCHAR(50),
+  color VARCHAR(20),
+  tipoDoc VARCHAR(10),
+  nroDoc INT,
+  PRIMARY KEY (patente),
+  FOREIGN KEY (tipoDoc, nroDoc) REFERENCES PROPIETARIO(tipoDoc, nroDoc)
+);
+
+CREATE TABLE FABRICANTE (
+  cuit VARCHAR(20),
+  razonSocial VARCHAR(100),
+  pais VARCHAR(50),
+  PRIMARY KEY (cuit)
+);
+
+CREATE TABLE PARTE (
+  cuit VARCHAR(20),
+  idparte INT,
+  nombre_parte VARCHAR(50),
+  marca VARCHAR(50),
+  modelo VARCHAR(50),
+  PRIMARY KEY (cuit, idparte),
+  FOREIGN KEY (cuit) REFERENCES FABRICANTE(cuit)
+);
+
+CREATE TABLE ACCIDENTE (
+  nroAccidente INT,
+  fecha DATE,
+  ciudad VARCHAR(50),
+  descripcion VARCHAR(200),
+  PRIMARY KEY (nroAccidente)
+);
+
+CREATE TABLE PARTICIPA (
+  nroAccidente INT,
+  patente VARCHAR(10),
+  PRIMARY KEY (nroAccidente, patente),
+  FOREIGN KEY (nroAccidente) REFERENCES ACCIDENTE(nroAccidente),
+  FOREIGN KEY (patente) REFERENCES VEHICULO(patente)
+);
+
+CREATE TABLE ARREGLA (
+  patente VARCHAR(10),
+  fecha DATE,
+  cuit VARCHAR(20),
+  idparte INT,
+  tipoDoc VARCHAR(10),
+  nroDoc INT,
+  PRIMARY KEY (patente,fecha,cuit,idparte),
+  FOREIGN KEY (cuit,idparte) REFERENCES PARTE(cuit,idparte),
+  FOREIGN KEY (patente) REFERENCES VEHICULO(patente),
+	
+  FOREIGN KEY (tipoDoc, nroDoc) REFERENCES MECANICO(tipoDoc, nroDoc)
+);
+
+INSERT INTO MECANICO (tipoDoc, nroDoc, nombre, apellido, calificacion, ciudad) VALUES
+('DNI', 12345678, 'Juan', 'Perez', 4, 'Ciudad A'),
+('DNI', 23456789, 'Maria', 'Lopez', 5, 'Ciudad B'),
+('DNI', 34567890, 'Carlos', 'Gomez', 3, 'Ciudad C'),
+('DNI', 45678901, 'Laura', 'Rodriguez', 2, 'Ciudad A'),
+('DNI', 56789012, 'Pedro', 'Sanchez', 4, 'Ciudad B'),
+('DNI', 67890123, 'Ana', 'Torres', 5, 'Ciudad C'),
+('DNI', 78901234, 'Luis', 'Fernandez', 3, 'Ciudad A'),
+('DNI', 89012345, 'Marta', 'Garcia', 2, 'Ciudad B'),
+('DNI', 90123456, 'Diego', 'Martinez', 4, 'Ciudad C'),
+('DNI', 12345000, 'Lucia', 'Santos', 5, 'Ciudad A');
+
+INSERT INTO PROPIETARIO (tipoDoc, nroDoc, nombre, apellido, licencia, ciudad) VALUES
+('DNI', 11111111, 'Jose', 'Gonzalez', 'ABC123', 'Neuquen'),
+('DNI', 22222222, 'Julia', 'Rodriguez', 'DEF456', 'Ciudad B'),
+('DNI', 33333333, 'Daniel', 'Hernandez', 'GHI789', 'Ciudad C'),
+('DNI', 44444444, 'Silvia', 'Lopez', 'JKL012', 'Ciudad A'),
+('DNI', 55555555, 'Raul', 'Fernandez', 'MNO345', 'Ciudad B'),
+('DNI', 66666666, 'Carolina', 'Perez', 'PQR678', 'Ciudad C'),
+('DNI', 77777777, 'Jorge', 'Martinez', 'STU901', 'Ciudad A'),
+('DNI', 88888888, 'Valeria', 'Gomez', 'VWX234', 'Ciudad B'),
+('DNI', 99999999, 'Roberto', 'Sanchez', 'YZA567', 'Ciudad C'),
+... (73 líneas restantes)
